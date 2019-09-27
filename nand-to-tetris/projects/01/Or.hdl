@@ -9,10 +9,23 @@
  *       0 otherwise
  */
 
+
+ /*
+   in nand - if any bit is 0, the result is 1
+
+   in or we want a situation where if any bit is 1
+   then the result is 0
+
+   so if we flip the bips before sending them into a nand.
+   We get or
+
+ */
 CHIP Or {
     IN a, b;
     OUT out;
 
     PARTS:
-    // Put your code here:
+    Not(in=a, out=nota);
+    Not(in=b, out=notb);
+    Nand(a=nota, b=notb, out=out);
 }
