@@ -42,5 +42,28 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+    // take the inputs and change them based on the zx, nx, zy and ny flags
+    Mux16(a=x, b=false, sel=zx, out=zxed);
+    Not16(in=zxed, out=nxe);
+    Mux16(a=zxed, b=nxe, sel=nx, out=nzxed);
+
+    Mux16(a=y, b=false, sel=zy, out=zyed);
+    Not16(in=zyed, out=nye);
+    Mux16(a=zyed, b=nye, sel=ny, out=nzyed);
+
+    // add and and the inputs 
+    // it seems we need to do both and then mux the outputs.
+    Add16(a=nzxed, b=nzyed, out=added);
+    And16(a=nzxed, b=nzyed, out=anded);
+
+    Mux16(a=anded, b=added, sel=f, out=andedoradded);
+    Not16(in=andedoradded, out=notandedoradded);
+
+    Mux16(a=andedoradded, b=notandedoradded, sel=no, out=out, out[0..7]=outlower, out[8..15]=outupper, out[15]=ng);
+
+    // checking if it is all zero for the zr output
+    Or8Way(in=outlower, out=outlowerallzero);
+    Or8Way(in=outupper, out=outupperallzero);
+    Or(a=outlowerallzero, b=outupperallzero, out=isoutzero);
+    Not(in=isoutzero, out=zr);
 }
