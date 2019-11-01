@@ -187,3 +187,48 @@ use the pin operator `^` to rebind
 x = 1
 ^x = 2
 ```
+
+
+
+## Processes / Concurrency
+spawn function is used to start a new BEAM process. They entirely seperate
+programs. No sharing of any data.
+
+Different processes can only communicate by sending messages
+
+We should expect to be running a LOT of processors.
+
+BEAM has a scheduler, we typically run one scheduler per CPU. The schedulers
+look after running our various processes.
+
+### cool stuff this allows
+If users connect via websockets - we can run a different process for every
+single user
+
+
+### When a process crashes
+
+Everything else continues!!! A failure is local to a process.
+This makes our systems more fault tolerant.
+
+The scheduler rapidly switches context - distributing CPU time fairly between
+all the running processes. This means that one slow long running process won't
+cause latency spikes in other processes.
+
+### Debugging
+
+BEAM allows us to 'introspect' the system.
+
+we can run an interactive elixir session on our running system.
+
+We can also look at running processes using `Process.list()`
+
+`Process.info(process)` allows us to see information about a given process
+
+There's probably a lot to learn here. Should just look the Process docs.
+
+
+
+## Interesting stuff to learn more about
+`with` and `do` blocks - which seem to allow us to write in a similar style to
+haskell do blocks
